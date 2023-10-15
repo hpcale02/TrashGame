@@ -1,15 +1,17 @@
 package com.hpc_ale.View;
 
+import com.hpc_ale.Model.JTrashGame;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class GameFrame extends JFrame {
-    private int numPlayer = 2;
-    private JButton takeCard = new JButton("Estrarre");
+    private JButton takeCard = new JButton("Pesca Carta");
+    private JTrashGame jTrashGame;
 
-    public GameFrame(int numPlayer) throws HeadlessException {
+    public GameFrame(JTrashGame jTG) throws HeadlessException {
 
-        this.numPlayer = numPlayer;
+        this.jTrashGame = jTG;
 
         //初始化界面
         initJFrame();
@@ -26,7 +28,7 @@ public class GameFrame extends JFrame {
         this.setTitle("JTrast");
         this.setAlwaysOnTop(true);          //窗口置顶
         this.setLocationRelativeTo(null);   //窗口居中
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
         this.setLayout(null);               //取消默认居中
     }
 
@@ -75,7 +77,7 @@ public class GameFrame extends JFrame {
                 this.getContentPane().add(cardBG_ob);
             }
         }
-        if (numPlayer > 2) {
+        if (jTrashGame.getNumPlayer() > 2) {
             //左
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 5; j++) {
@@ -84,7 +86,7 @@ public class GameFrame extends JFrame {
                     this.getContentPane().add(cardBG_lr);
                 }
             }
-            if (numPlayer > 3) {
+            if (jTrashGame.getNumPlayer() > 3) {
                 //右
                 for (int i = 0; i < 2; i++) {
                     for (int j = 0; j < 5; j++) {

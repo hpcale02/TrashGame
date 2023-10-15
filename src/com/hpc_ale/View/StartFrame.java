@@ -1,10 +1,8 @@
 package com.hpc_ale.View;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class StartFrame extends JFrame implements ActionListener {
+public class StartFrame extends JFrame {
 
     private JButton oneVsOne = new JButton("1-VS-1");
     private JButton oneVsTwo = new JButton("1-VS-2");
@@ -16,6 +14,18 @@ public class StartFrame extends JFrame implements ActionListener {
         initImage();
 
         this.setVisible(true);
+    }
+
+    public JButton getOneVsOne() {
+        return oneVsOne;
+    }
+
+    public JButton getOneVsTwo() {
+        return oneVsTwo;
+    }
+
+    public JButton getOneVsTree() {
+        return oneVsTree;
     }
 
     public void initImage() {
@@ -30,11 +40,6 @@ public class StartFrame extends JFrame implements ActionListener {
         this.getContentPane().add(oneVsOne);
         this.getContentPane().add(oneVsTwo);
         this.getContentPane().add(oneVsTree);
-
-        //添加监听事件
-        oneVsOne.addActionListener(this);
-        oneVsTwo.addActionListener(this);
-        oneVsTree.addActionListener(this);
 
         //添加背景图片
         JLabel bg = new JLabel(new ImageIcon("src/image/table.jpg"));
@@ -54,19 +59,5 @@ public class StartFrame extends JFrame implements ActionListener {
         this.setLayout(null);                //取消默认居中
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Object obj = e.getSource();
 
-        this.removeAll();
-        this.setVisible(false);
-
-        if (obj == oneVsOne) {
-            new GameFrame(2);
-        } else if (obj == oneVsTwo) {
-            new GameFrame(3);
-        } else if (obj == oneVsTree) {
-            new GameFrame(4);
-        }
-    }
 }
