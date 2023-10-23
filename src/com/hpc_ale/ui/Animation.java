@@ -3,7 +3,7 @@ package com.hpc_ale.ui;
 import java.awt.*;
 
 public class Animation {
-    public static void move(Poker poker, Point from, Point to) {
+    public static void move(Poker poker, Point from, Point to, int sleep) {
         if (to.x != from.x) {
             double k = (1.0) * (to.y - from.y) / (to.x - from.x);
             double b = to.y - to.x * k;
@@ -17,7 +17,7 @@ public class Animation {
                 double y = k * i + b;
                 poker.setLocation(i, (int) y);
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(sleep);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -1,13 +1,11 @@
 package com.hpc_ale.ui;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Poker extends JLabel {
 
     private String name;
     private boolean up;
-    private Point location;
     private boolean normalDirection;
 
     public Poker(String name, boolean up, boolean normalDirection) {
@@ -53,18 +51,8 @@ public class Poker extends JLabel {
         this.up = false;
     }
 
-    public boolean isFront() {
-        if (up) {
-            return true;
-        }
-        return false;
-    }
-
     public boolean isRear() {
-        if (up) {
-            return false;
-        }
-        return true;
+        return !up;
     }
 
     @Override
@@ -91,16 +79,24 @@ public class Poker extends JLabel {
         this.normalDirection = normalDirection;
         if (normalDirection) {
             this.setSize(70, 98);
-            this.setIcon(new ImageIcon("src/image/card/obCard/cardBG.png"));
+            if (up) {
+                this.setIcon(new ImageIcon("src/image/card/obCard/" + name + ".png"));
+            } else {
+                this.setIcon(new ImageIcon("src/image/card/obCard/cardBG.png"));
+            }
         } else {
             this.setSize(98, 70);
-            this.setIcon(new ImageIcon("src/image/card/lrCard/cardBG.png"));
+            if (up) {
+                this.setIcon(new ImageIcon("src/image/card/lrCard/" + name + ".png"));
+            } else {
+                this.setIcon(new ImageIcon("src/image/card/lrCard/cardBG.png"));
+            }
         }
     }
 
     public int getNum() {
         try {
-            return Integer.parseInt(name.substring(2, name.length()));
+            return Integer.parseInt(name.substring(2));
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
         }

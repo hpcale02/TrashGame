@@ -17,7 +17,7 @@ public class TestRemoveAll extends JFrame {
 
         this.setVisible(true);
 
-        Animation.move(p, p.getLocation(), to);
+        Animation.move(p, p.getLocation(), to, 10);
     }
 
     public static void main(String[] args) {

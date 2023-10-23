@@ -1,11 +1,5 @@
 package com.hpc_ale.ui;
 
-/**
- * //抽卡按钮
- * takeCard.setBounds(365, 362, 145, 50);
- * this.getContentPane().add(takeCard);
- */
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,33 +10,22 @@ import java.util.Collections;
 public class GameFrame extends JFrame implements ActionListener {
     private static Container container = null;
     private final JButton takeCard = new JButton("Pesca Carta");
-    private final JButton oneVsOne = new JButton("1-VS-1");
-    private final JButton oneVsTwo = new JButton("1-VS-2");
-    private final JButton oneVsTree = new JButton("1-VS-3");
-    private ArrayList<JButton> setPlayer;
-    private ArrayList<Poker> deck;
+    private final ArrayList<Poker> deck;
     private int numDeck = 1;
-    private int numPlayer;
+    private final int numPlayer;
     private int turn = 0;
     private int countCatd = 0;
-    private JLabel bg = new JLabel(new ImageIcon("src/image/table.jpg"));
-    private Player[] players;
+    private final JLabel bg = new JLabel(new ImageIcon("src/image/table.jpg"));
+    private final Player[] players;
     private boolean gameOver;
     private boolean cardIsTake = false;
 
     public GameFrame(int numPlayer) {
         this.gameOver = false;
-        this.players = new Player[numPlayer];
         this.numPlayer = numPlayer;
+        players = new Player[numPlayer];
         this.deck = new ArrayList<>();
         this.takeCard.addActionListener(this);
-
-        /**
-         this.setPlayer = new ArrayList<>();
-         this.setPlayer.add(oneVsOne);
-         this.setPlayer.add(oneVsTwo);
-         this.setPlayer.add(oneVsTree);
-         */
 
         this.bg.setBounds(0, 0, 800, 800);
         initJFrame();
@@ -62,12 +45,12 @@ public class GameFrame extends JFrame implements ActionListener {
     }
 
     public void endGame() {
-
+        container.removeAll();
+        container.repaint();
     }
 
     public void startGame() throws InterruptedException {
         while (!gameOver) {
-            Thread.sleep(100);
             if (turn != 0) {
                 takeCard.setVisible(false);
                 turnGame();
@@ -85,45 +68,62 @@ public class GameFrame extends JFrame implements ActionListener {
                 }
             }
 
-            if (countCatd == numDeck * 54) {
+            if (players[turn].isWinner() || countCatd >= numDeck * 54) {
                 gameOver = true;
             }
+
         }
     }
 
-    public void turnGame() throws InterruptedException {
+    public void turnGame() {
+        //获得卡组里的嘴上面的卡牌
         Poker c = deck.get(countCatd);
         container.setComponentZOrder(c, 0);
         countCatd++;
+
+        //反转卡牌
         c.turnFront();
+
+        //如果玩家在（左-右）转一下卡牌
+        if (turn == 2 || turn == 3) {
+            c.setNormalDirection(false);
+        }
+
+        //最终卡牌抛出的位置
         Point to = new Point(400, 338);
+
+        //玩家抽取卡牌，如果卡牌在1-10抛出一张相对应的手卡
         Poker dropCard = players[turn].takeCard(c);
+
+        //直到玩家没有翻出1-10之间的卡牌
         while (dropCard != null) {
+
+            //获取翻出卡牌的坐标
             Point dropCardLocation = dropCard.getLocation();
+
+            //反转翻出的卡牌
             dropCard.turnFront();
             container.setComponentZOrder(dropCard, 0);
-            Thread.sleep(100);
-            Animation.move(dropCard, dropCard.getLocation(), to);
-            Thread.sleep(100);
-            Animation.move(c, c.getLocation(), dropCardLocation);
+
+            //移动这张卡牌到等待区域等待翻出下一张卡牌
+            Animation.move(dropCard, dropCard.getLocation(), to, 50);
+
+            //把从卡组里抽到的牌放进手牌里
+            Animation.move(c, c.getLocation(), dropCardLocation, 50);
+
+            //把收取的牌变成玩家抛出的那张
             c = dropCard;
+
+            //玩家抽取上轮抛出的牌来判断是否继续
             dropCard = players[turn].takeCard(c);
         }
-        Animation.move(c, c.getLocation(), to);
-    }
 
-    /**
-     public void initStartButton() {
-     //impostare & aggiungere i bottoni
-     int y = 200;
-     for (JButton button : setPlayer) {
-     button.setBounds(300, y, 200, 90);
-     container.add(button);
-     y += 150;
-     }
-     container.repaint();
-     }
-     */
+        //如果玩家在（左-右）转一下卡牌
+        if (turn == 2 || turn == 3) {
+            c.setNormalDirection(true);
+        }
+        Animation.move(c, c.getLocation(), to, 50);
+    }
 
     /**
      * Inizializzare il frame a
@@ -191,7 +191,6 @@ public class GameFrame extends JFrame implements ActionListener {
         //se ci sono più di 2 player distruibuirlo anche a quello di sinistra
         if (numPlayer > 2) {
             disCardsToPlayer(2, 5, 215, false);
-
             //se ci sono 4 players distribuire tutte le carte
             if (numPlayer > 3) {
                 disCardsToPlayer(3, 595, 215, false);
@@ -220,7 +219,7 @@ public class GameFrame extends JFrame implements ActionListener {
                 } else {
                     to.setLocation(x + (i * 103), y + (j * 75));
                 }
-                Animation.move(card, card.getLocation(), to);
+                Animation.move(card, card.getLocation(), to, 10);
                 countCatd++;
             }
         }

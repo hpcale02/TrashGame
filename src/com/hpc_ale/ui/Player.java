@@ -1,14 +1,19 @@
 package com.hpc_ale.ui;
 
 public class Player {
-    private Poker[] cards;
+    public Poker[] cards;
 
     public Player(Poker[] cards) {
         this.cards = cards;
     }
 
-    public Poker[] getCards() {
-        return cards;
+    public boolean isWinner() {
+        for (Poker card : cards) {
+            if (card.isRear()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public Poker takeCard(Poker card) {
